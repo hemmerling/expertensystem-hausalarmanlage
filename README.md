@@ -1,5 +1,5 @@
 # expertensystem-hausalarmanlage
-Expertensystem einer in ein "Hausnotruf" System eingebundenen Hausalarmanlage, für die Expertensystem-Software "Expert" von Lothar Köhler 
+Expertensystem für funkbasierte leitungslose, in ein "Hausnotruf" System eingebundene Haus-Alarmanlagen, für die Expertensystem-Software "Expert" von Lothar Köhler 
 
 Bezugsquelle für die zur Ausführung notwendige Expertensystem-Software "Expert": 
 Prof. Dr. rer. nat. Lothar Köhler,
