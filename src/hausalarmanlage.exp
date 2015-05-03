@@ -1,0 +1,121 @@
+Expertensystem: Hausalarmanlage
+
+Frame: Hausalarmanlage
+Bem: {Hausalarmanlage
+Expertensystem fuer funkbasierte leitungslose Haus-Alarmanlagen 
+Copyright 2005-2015 Rolf Hemmerling
+Licensed under the Apache License, Version 2.0
+}
+Slot: Fenster (unbekannt, offen, geschlossen, auf_Klappe, wird_geöffnet, wird_geschlossen)
+Slot: Haustür (unbekannt, offen, geschlossen, abgeschlossen, wird_geöffnet, wird_von_innen_geschlossen)
+Slot: Gasmelder (unbekannt, Gas_im_Haus, bereit)
+Slot: Wassermelder (unbekannt, bereit, Überschwemmung)
+Slot: Rauchmelder (unbekannt, Rauch_im_Haus, bereit)
+Slot: Telephon (unbekannt, frei, ankommender_Anruf, meldet_Einbruch, meldet_Unfall, meldet_Personennotfall, ruft_Alarmzentrale_an, melde_Überfall, meldet_Sachschadensfall)
+Slot: Bewohner (unbekannt, ok, Ueberfall, Notfall, will_Alarmzentrale_sprechen)
+Slot: Fernbedienung (unbekannt, deaktivieren_Einbruchsalarm, aktivieren_Einbruchsalarm, Personen-Notfall, Ueberfall)
+Slot: Personen_im_Haus (unbekannt, ja, nein)
+Slot: Notrufzentrale (unbekannt, nimmt_Anruf_an, hebt_nicht_ab, ruft_an, ruft_zurueck)
+Slot: Alarmstatus (unbekannt, Einbruch, PersonenNotfall, Sachschadengefahr, Überfall, ok)
+Slot: AktivierungsStatus (unbekannt, scharf, abgeschaltet)
+Slot: Kellertür (unbekannt, offen, geschlossen, wird_geöffnet, wird_geschlossen)
+Slot: Sprinkleranlage (unbekannt, bereit, sprüht_Wasser)
+Slot: Feuermelderknopf (unbekannt, ausgelöst, bereit)
+Slot: Hitzemelder (unbekannt, Feuerhitze_im_Haus, bereit)
+Slot: Einbruch (unbekannt, ja, nein)
+Slot: Überfall (unbekannt, ja, nein)
+Slot: Sicherheit (unbekannt, hoch, mittel, niedrig)
+Slot: Sachschaden (unbekannt, ja, nein)
+Slot: InHouse_Lautsprecher (unbekannt, stumm, Alarmton)
+Slot: Hauswand-Signalhorn (unbekannt, stumm, Signalton)
+Slot: Personenschaden_Gefahr (unbekannt, möglich, nein)
+Slot: Arzt (unbekannt, kommt)
+Slot: Polizei (unbekannt, kommt)
+Slot: Rettungssanitäter (unbekannt, kommen)
+Slot: Feuerwehr (unbekannt, kommt)
+Regel: Einbruch_Kellertür, Priorität: 10
+WENN Alarmanlage.AktivierungsStatus = scharf
+ UND Alarmanlage.Kellertür = wird_geöffnet
+DANN Alarmanlage.Einbruch = ja
+Regel: Einbruch_Haustür, Priorität: 11
+WENN Alarmanlage.AktivierungsStatus = scharf
+ UND Alarmanlage.Haustür = wird_geöffnet
+DANN Alarmanlage.Einbruch = ja
+Regel: Überfall, Priorität: 20
+WENN Alarmanlage.Einbruch = ja
+ UND Alarmanlage.Personen_im_Haus = ja
+DANN Alarmanlage.Überfall = ja
+Regel: Einbruch_Fenster, Priorität: 12
+WENN Alarmanlage.AktivierungsStatus = scharf
+ UND Alarmanlage.Fenster = wird_geöffnet
+DANN Alarmanlage.Einbruch = ja
+Regel: Gas, Priorität: 13
+WENN Alarmanlage.Gasmelder = Gas_im_Haus
+DANN Alarmanlage.Sachschaden = ja
+Regel: Wasser, Priorität: 14
+WENN Alarmanlage.Wassermelder = Überschwemmung
+DANN Alarmanlage.Sachschaden = ja
+Regel: Rauch, Priorität: 15
+WENN Alarmanlage.Rauchmelder = Rauch_im_Haus
+DANN Alarmanlage.Sachschaden = ja
+Regel: Feuerhitze, Priorität: 16
+WENN Alarmanlage.Hitzemelder = Feuerhitze_im_Haus
+DANN Alarmanlage.Sachschaden = ja
+Regel: Personenschaden_Gefahr, Priorität: 22
+WENN Alarmanlage.Sachschaden = ja
+ UND Alarmanlage.Personen_im_Haus = ja
+DANN Alarmanlage.Personenschaden_Gefahr = möglich
+Regel: Einbruchs_Aktivierung, Priorität: 1
+WENN Alarmanlage.Fernbedienung = aktivieren_Einbruchsalarm
+DANN Alarmanlage.AktivierungsStatus = scharf
+Regel: Einbruchs_Deaktivierung, Priorität: 2
+WENN Alarmanlage.Fernbedienung = deaktivieren_Einbruchsalarm
+DANN Alarmanlage.AktivierungsStatus = abgeschaltet
+Regel: Personen_im_Haus, Priorität: 3
+WENN Alarmanlage.Haustür = wird_von_innen_geschlossen
+ UND Alarmanlage.Kellertür = geschlossen
+ UND Alarmanlage.Fenster = geschlossen
+DANN Alarmanlage.Personen_im_Haus = ja
+Regel: Kein_Sachschaden, Priorität: 9
+WENN Alarmanlage.Gasmelder = bereit
+ UND Alarmanlage.Wassermelder = bereit
+ UND Alarmanlage.Rauchmelder = bereit
+ UND Alarmanlage.Hitzemelder = bereit
+ UND Alarmanlage.Feuermelderknopf = bereit
+DANN Alarmanlage.Sachschaden = nein
+Regel: Einbruchsmeldung, Priorität: 1
+WENN Alarmanlage.Einbruch = ja
+DANN Alarmanlage.Telephon = meldet_Einbruch
+Regel: Überfallmeldung, Priorität: 1
+WENN Alarmanlage.Überfall = ja
+DANN Alarmanlage.Telephon = melde_Überfall
+Regel: Feuermeldeknopf_drücken, Priorität: 1
+WENN Alarmanlage.Feuermelderknopf = ausgelöst
+DANN Alarmanlage.Sachschaden = ja
+Regel: Brandbekämpfung, Priorität: 4
+WENN Alarmanlage.Hitzemelder = Feuerhitze_im_Haus
+DANN Alarmanlage.Sprinkleranlage = sprüht_Wasser
+Regel: Sachschadensmeldung, Priorität: 31
+WENN Alarmanlage.Sachschaden = ja
+DANN Alarmanlage.Telephon = meldet_Sachschadensfall
+Regel: Sachschadensalarmton, Priorität: 32
+WENN Alarmanlage.Sachschaden = ja
+DANN Alarmanlage.Hauswand-Signalhorn = Signalton
+Regel: Interner_Sachschadensalarmton, Priorität: 33
+WENN Alarmanlage.Hauswand-Signalhorn = Signalton
+DANN Alarmanlage.InHouse_Lautsprecher = Alarmton
+Regel: Notruf_Meldung, Priorität: 5
+WENN Alarmanlage.Fernbedienung = Personen-Notfall
+DANN Alarmanlage.Personenschaden_Gefahr = möglich
+Regel: Feuerwehr_kommt, Priorität: 60
+WENN Alarmanlage.Telephon = meldet_Sachschadensfall
+DANN Alarmanlage.Feuerwehr = kommt
+Regel: Polizei_kommt, Priorität: 61
+WENN Alarmanlage.Telephon = meldet_Einbruch
+DANN Alarmanlage.Polizei = kommt
+Regel: Rettungssanitäter_kommen, Priorität: 62
+WENN Alarmanlage.Telephon = meldet_Personennotfall
+DANN Alarmanlage.Rettungssanitäter = kommen
+Regel: Warum_Rettungssanitäter, Priorität: 72
+WENN Alarmanlage.Rettungssanitäter = kommen
+DANN Alarmanlage.Telephon = meldet_Personennotfall
